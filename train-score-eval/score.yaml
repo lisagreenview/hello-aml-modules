@@ -1,4 +1,4 @@
-moduleIdentifier:
+amlModuleIdentifier:
   namespace: microsoft.com/aml/samples
   moduleName: "Score"
   moduleVersion: 0.0.3
