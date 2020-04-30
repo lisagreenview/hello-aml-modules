@@ -1,4 +1,3 @@
-name: eselect2
 description: Selects columns from input file based on the column description in the first line. Similar to cut (and grep), but column names can be used.
 amlModuleIdentifier:
   namespace: microsoft.com/bing

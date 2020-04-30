@@ -1,4 +1,3 @@
-name: ejoin 
 description: Combines two TSVs by performing a join on the key fields.
 amlModuleIdentifier:
   namespace: microsoft.com/bing

@@ -1,4 +1,3 @@
-name: to_dfd
 description: Convert tsv/csv file to dataframe directory with simple visualization
 amlModuleIdentifier:
   namespace: microsoft.com/aml
