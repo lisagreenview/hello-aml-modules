@@ -41,10 +41,10 @@ implementation:
               - azureml-defaults
     command: [python, compare2.py]
     args: [
-      --model1, {inputPath: model1},
-      --eval_result1, {inputPath: eval_result1},
-      --model2, {inputPath: model2},
-      --eval_result2, {inputPath: eval_result2},
+      [--model1, {inputPath: model1}],
+      [--eval_result1, {inputPath: eval_result1}],
+      [--model2, {inputPath: model2}],
+      [--eval_result2, {inputPath: eval_result2}],
       --best_model, {outputPath: best_model},
       --best_result, {outputPath: best_result}
     ]

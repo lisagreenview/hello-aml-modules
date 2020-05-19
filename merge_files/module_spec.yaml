@@ -32,5 +32,5 @@ implementation:
     args:[
         --input_folder, {inputPath: InputFolder},
         --output_folder, {outputPath: OutputFolder},
-        --merge_count, {inputValue: merge_count},
+        [--merge_count, {inputValue: merge_count}],
     ]
