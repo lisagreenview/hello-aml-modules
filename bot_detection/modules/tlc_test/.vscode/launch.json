@@ -1,0 +1,41 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "entry",
+            "type": "python",
+            "request": "launch",
+            "args": [
+                "--trained_model",
+                "tests\\tlc_test\\inputs\\trained_model",
+                "--test_data",
+                "tests\\tlc_test\\inputs\\test_data",
+                "--per_instance_predictions",
+                "tests\\tlc_test\\outputs\\per_instance_predictions",
+                "--instances_reader",
+                "some string",
+                "--instances_settings",
+                "some string",
+                "--random_seed",
+                "0",
+                "--proportion_of_train_data_to_use",
+                "0.0",
+                "--skipchartrain",
+                "some string",
+                "--skipchartest",
+                "some string",
+                "--evaluator",
+                "some string",
+                "--evaluator_settings",
+                "some string",
+                "--debug_level",
+                "0"
+            ],
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "program": "D:\\Projects\\hello-aml-modules\\bot_detection\\modules\\tlc_test\\entry.py"
+        }
+    ]
+}
