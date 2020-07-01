@@ -61,15 +61,15 @@ implementation:
               - azureml-defaults
     command: [python, compare.py]
     args: [
-      --input01, {inputPath: input01},
-      --input02, {inputPath: input02},
-      --input03, {inputPath: input03},
-      --input04, {inputPath: input04},
-      --input05, {inputPath: input05},
-      --input06, {inputPath: input06},
-      --input07, {inputPath: input07},
-      --input08, {inputPath: input08},
-      --input09, {inputPath: input09},
-      --input10, {inputPath: input10},
+      [--input01, {inputPath: input01}],
+      [--input02, {inputPath: input02}],
+      [--input03, {inputPath: input03}],
+      [--input04, {inputPath: input04}],
+      [--input05, {inputPath: input05}],
+      [--input06, {inputPath: input06}],
+      [--input07, {inputPath: input07}],
+      [--input08, {inputPath: input08}],
+      [--input09, {inputPath: input09}],
+      [--input10, {inputPath: input10}],
       --compare_output, {outputPath: compare_output}
     ]
