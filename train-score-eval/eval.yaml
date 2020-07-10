@@ -1,11 +1,11 @@
 amlModuleIdentifier:
   namespace: microsoft.com/aml/samples
   moduleName: "Evaluate"
-  moduleVersion: 0.0.5
+  moduleVersion: 0.0.6
 description: A dummy evaluate module
 inputs:
 - name: scoring_result
-  type: AnyFile
+  type: AnyDirectory
   description: Scoring result file in TSV format
 outputs:
 - name: eval_output
