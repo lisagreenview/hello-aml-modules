@@ -1,5 +1,5 @@
 import argparse
-import pathlib
+from pathlib import Path
 
 parser = argparse.ArgumentParser("train")
 parser.add_argument("--training_data", type=str, help="Path to training data")
@@ -11,8 +11,9 @@ args = parser.parse_args()
 
 lines = [f'Training data path: {args.training_data}', f'Max epochs: {args.max_epochs}', f'Learning rate: {args.learning_rate}', f'Model output path: {args.model_output}']
 
-pathlib.Path(args.model_output).parent.absolute().mkdir(parents=True, exist_ok=True)
-with open(args.model_output, 'w') as file:
+Path(args.model_output).mkdir(parents=True, exist_ok=True)
+model_output = Path(args.model_output)/Path('model').name
+with open(model_output, 'w') as file:
     for line in lines:
         print(line)
         file.write(line + "\n")

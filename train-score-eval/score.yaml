@@ -1,18 +1,18 @@
 amlModuleIdentifier:
   namespace: microsoft.com/aml/samples
   moduleName: "Score"
-  moduleVersion: 0.0.4
+  moduleVersion: 0.0.5
 description: A dummy scoring module
 inputs:
 - name: model_input
-  type: AnyFile
+  type: AnyDirectory
   description: Zipped model file
 - name: test_data
   type: [AnyFile, AnyDirectory]
   description: Test data organized in the torchvision format/structure
 outputs:
 - name: score_output
-  type: AnyFile
+  type: AnyDirectory
   description: The scoring result in TSV
 implementation:
   container:

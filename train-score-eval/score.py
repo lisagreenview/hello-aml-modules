@@ -1,5 +1,5 @@
 import argparse
-import pathlib
+from pathlib import Path
 
 parser = argparse.ArgumentParser("score")
 parser.add_argument("--model_input", type=str, help="Path of input model")
@@ -10,8 +10,9 @@ args = parser.parse_args()
 
 lines = [f'Model path: {args.model_input}', f'Test data path: {args.test_data}', f'Scoring output path: {args.score_output}']
 
-pathlib.Path(args.score_output).parent.absolute().mkdir(parents=True, exist_ok=True)
-with open(args.score_output, 'w') as file:
+Path(args.score_output).mkdir(parents=True, exist_ok=True)
+output_file = Path(args.score_output)/Path('score').name
+with open(output_file, 'w') as file:
     for line in lines:
         print(line)
         file.write(line + "\n")

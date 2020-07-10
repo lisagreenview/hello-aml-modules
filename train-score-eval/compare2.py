@@ -1,5 +1,5 @@
 import argparse
-import pathlib
+from pathlib import Path
 
 parser = argparse.ArgumentParser("compare2")
 parser.add_argument("--model1", type=str, help="The first model to compare with")
@@ -14,8 +14,16 @@ args = parser.parse_args()
 
 lines = [f'Model #1: {args.model1}', f'Evaluation #1: {args.eval_result1}', f'Model #2: {args.model2}', f'Evaluation #2: {args.eval_result2}', f'Best model path: {args.best_model}']
 
-pathlib.Path(args.best_model).parent.absolute().mkdir(parents=True, exist_ok=True)
-with open(args.best_model, 'w') as file:
+Path(args.best_model).mkdir(parents=True, exist_ok=True)
+model_output = Path(args.best_model)/Path('model').name
+with open(model_output, 'w') as file:
+    for line in lines:
+        print(line)
+        file.write(line + "\n")
+
+Path(args.best_result).mkdir(parents=True, exist_ok=True)
+result_output = Path(args.best_result)/Path('result').name
+with open(result_output, 'w') as file:
     for line in lines:
         print(line)
         file.write(line + "\n")

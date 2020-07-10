@@ -1,7 +1,7 @@
 amlModuleIdentifier:
   namespace: microsoft.com/aml/samples
   moduleName: "MPI Train"
-  moduleVersion: 0.0.6
+  moduleVersion: 0.0.8
 jobType: Mpi
 description: A dummy module to show how to describe MPI module with custom module spec.
 inputs:
@@ -19,7 +19,7 @@ inputs:
   description: Learning rate, default is 0.01
 outputs:
 - name: model_output
-  type: AnyFile
+  type: AnyDirectory
   description: The output model (zipped)
 implementation:
   container:

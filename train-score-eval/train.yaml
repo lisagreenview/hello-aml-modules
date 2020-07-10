@@ -1,7 +1,7 @@
 amlModuleIdentifier:
   namespace: microsoft.com/aml/samples
   moduleName: "Train"
-  moduleVersion: 0.0.6
+  moduleVersion: 0.0.7
 inputs:
 - name: training_data
   type:
@@ -17,7 +17,7 @@ inputs:
   description: Learning rate, default is 0.01
 outputs:
 - name: model_output
-  type: AnyFile
+  type: AnyDirectory
   description: The output model (zipped)
 implementation:
   container:

@@ -1,7 +1,7 @@
 amlModuleIdentifier:
   namespace: microsoft.com/aml/samples
   moduleName: "Evaluate"
-  moduleVersion: 0.0.6
+  moduleVersion: 0.0.7
 description: A dummy evaluate module
 inputs:
 - name: scoring_result

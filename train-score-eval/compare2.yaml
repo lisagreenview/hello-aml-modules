@@ -1,31 +1,31 @@
 amlModuleIdentifier:
   namespace: microsoft.com/aml/samples
   moduleName: "Compare 2 Models"
-  moduleVersion: 0.0.8
+  moduleVersion: 0.0.9
 description: A dummy comparison module takes two models as input and outputs the better one 
 inputs:
 - name: model1
-  type: AnyFile
+  type: AnyDirectory
   description: 'The first model to compare with'
   optional: True
 - name: eval_result1
-  type: AnyFile
+  type: AnyDirectory
   description: 'The evaluation result of first model'
   optional: True
 - name: model2
-  type: AnyFile
+  type: AnyDirectory
   description: 'The second model to compare'
   optional: True
 - name: eval_result2
-  type: AnyFile
+  type: AnyDirectory
   description: 'The evaluation result of second model'
   optional: True
 outputs:
 - name: best_model
-  type: AnyFile
+  type: AnyDirectory
   description: The better model among the two
 - name: best_result
-  type: AnyFile
+  type: AnyDirectory
   description: The better model evaluation result among the two
 implementation:
   container:
