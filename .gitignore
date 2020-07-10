@@ -4,3 +4,6 @@
 .vscode/hello-aml-modules.code-workspace
 .vscode/launch.json
 *.pyc
+export/
+recommender/
+.azureml/
