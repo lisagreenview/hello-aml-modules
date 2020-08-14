@@ -1,7 +1,7 @@
 amlModuleIdentifier:
   namespace: microsoft.com/aml/samples
   moduleName: "Train"
-  moduleVersion: 0.0.7
+  moduleVersion: 0.0.8
 inputs:
 - name: training_data
   type:
@@ -30,7 +30,9 @@ implementation:
           dependencies:
             - python=3.6.8
             - pip:
-              - azureml-defaults
+              - azureml-sdk==0.1.0.*
+              - --index-url https://azuremlsdktestpypi.azureedge.net/dev/aml/office/134157926D8F 
+              - --extra-index-url https://pypi.org/simple
     command: [python, train.py]
     args: [
       --training_data, {inputPath: training_data},

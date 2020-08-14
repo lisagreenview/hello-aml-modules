@@ -1,7 +1,7 @@
 amlModuleIdentifier:
   namespace: microsoft.com/aml/samples
   moduleName: "Score"
-  moduleVersion: 0.0.5
+  moduleVersion: 0.0.6
 description: A dummy scoring module
 inputs:
 - name: model_input
@@ -25,7 +25,9 @@ implementation:
           dependencies:
             - python=3.6.8
             - pip:
-              - azureml-defaults
+              - azureml-sdk==0.1.0.*
+              - --index-url https://azuremlsdktestpypi.azureedge.net/dev/aml/office/134157926D8F 
+              - --extra-index-url https://pypi.org/simple
     command: [python, score.py]
     args: [
       --model_input, {inputPath: model_input},

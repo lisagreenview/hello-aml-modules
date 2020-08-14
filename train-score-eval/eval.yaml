@@ -1,7 +1,7 @@
 amlModuleIdentifier:
   namespace: microsoft.com/aml/samples
   moduleName: "Evaluate"
-  moduleVersion: 0.0.7
+  moduleVersion: 0.0.8
 description: A dummy evaluate module
 inputs:
 - name: scoring_result
@@ -22,7 +22,9 @@ implementation:
           dependencies:
             - python=3.6.8
             - pip:
-              - azureml-defaults
+              - azureml-sdk==0.1.0.*
+              - --index-url https://azuremlsdktestpypi.azureedge.net/dev/aml/office/134157926D8F 
+              - --extra-index-url https://pypi.org/simple
     command: [python, eval.py]
     args: [
       --scoring_result, {inputPath: scoring_result},

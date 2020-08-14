@@ -1,7 +1,7 @@
 amlModuleIdentifier:
   namespace: microsoft.com/aml/samples
   moduleName: "Compare 2 Models"
-  moduleVersion: 0.0.9
+  moduleVersion: 0.0.10
 description: A dummy comparison module takes two models as input and outputs the better one 
 inputs:
 - name: model1
@@ -38,7 +38,9 @@ implementation:
           dependencies:
             - python=3.6.8
             - pip:
-              - azureml-defaults
+              - azureml-sdk==0.1.0.*
+              - --index-url https://azuremlsdktestpypi.azureedge.net/dev/aml/office/134157926D8F 
+              - --extra-index-url https://pypi.org/simple
     command: [python, compare2.py]
     args: [
       [--model1, {inputPath: model1}],

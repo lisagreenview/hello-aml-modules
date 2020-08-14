@@ -1,7 +1,7 @@
 amlModuleIdentifier:
   namespace: microsoft.com/aml/samples
   moduleName: "MPI Train"
-  moduleVersion: 0.0.9
+  moduleVersion: 0.0.10
 jobType: Mpi
 description: A dummy module to show how to describe MPI module with custom module spec.
 inputs:
@@ -34,9 +34,11 @@ implementation:
           dependencies:
             - python=3.6.8
             - pip:
-              - azureml-sdk
               - torch
               - horovod[pytorch]
+              - azureml-sdk==0.1.0.*
+              - --index-url https://azuremlsdktestpypi.azureedge.net/dev/aml/office/134157926D8F 
+              - --extra-index-url https://pypi.org/simple              
     command: [/opt/miniconda/envs/amlbert/bin/python, mpi_train.py]
     args: [
       --training_data, {inputPath: training_data},
