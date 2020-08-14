@@ -1,7 +1,7 @@
 amlModuleIdentifier:
   namespace: microsoft.com/aml/samples
   moduleName: "MPI Train"
-  moduleVersion: 0.0.8
+  moduleVersion: 0.0.9
 jobType: Mpi
 description: A dummy module to show how to describe MPI module with custom module spec.
 inputs:
@@ -25,7 +25,7 @@ implementation:
   container:
     amlEnvironment:
       docker:
-        baseImage: mcr.microsoft.com/azureml/base:intelmpi2018.3-ubuntu16.04
+        baseImage: mcr.microsoft.com/azureml/base:openmpi3.1.2-ubuntu16.04
       python:
         condaDependencies:
           name: project_environment
