@@ -1,0 +1,29 @@
+amlModuleIdentifier:
+  moduleName: Parallel Copy Files
+  moduleVersion: 0.0.1
+  namespace: microsoft.com/azureml/samples
+metadata:
+  annotations:
+    tags: [Sample, Parallel]
+    contact: Microsoft Coporation <xxx@microsoft.com>
+    helpDocument: https://aka.ms/parallel-modules
+description: A sample Parallel module to copy files.
+jobType: parallel
+inputs:
+- name: Input Folder
+  type: AnyDirectory
+outputs:
+- name: Output Folder
+  type: AnyDirectory
+  description: Output images
+implementation:
+  parallel:
+    amlEnvironment:
+      python:
+        condaDependenciesFile: copy_files_conda.yaml
+    inputData: Input Folder
+    outputData: Output Folder
+    entry: copy_files.py
+    args: [
+      --output-dir, {outputPath: Output Folder}
+    ]

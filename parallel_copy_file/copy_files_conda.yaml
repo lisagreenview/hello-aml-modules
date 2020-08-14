@@ -1,0 +1,14 @@
+name: project_environment
+channels:
+  - anaconda
+  - conda-forge
+dependencies:
+  - python=3.6.8
+  - pip:
+    - azure-storage-queue~=2.1
+    - azure-storage-common~=2.1
+    - azureml-core~=1.0
+    - azureml-telemetry~=1.0
+    - azureml-dataprep[fuse,pandas]~=1.1
+    - filelock~=3.0
+  - psutil
