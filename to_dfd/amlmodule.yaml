@@ -1,21 +1,32 @@
 description: Convert tsv/csv file to dataframe directory with simple visualization
 amlModuleIdentifier:
-  namespace: microsoft.com/aml
+  namespace: microsoft.com/aml/samples
   moduleName: to_dfd
-  moduleVersion: 0.0.3
+  moduleVersion: 0.0.1
 metadata:
   annotations:
     labels:
-    - aml official
     - data transformation
 inputs:
 - name: input
-  type: [AnyFile, AnyDirectory]
+  type: AnyDirectory
 outputs:
 - name: output
   type: DataFrameDirectory
 implementation:
   container:
-    image: ttthree/modules:latest
+    amlEnvironment:
+      python:
+        condaDependencies:
+          name: project_environment
+          channels:
+            - defaults
+          dependencies:
+            - python=3.6.8
+            - pip:
+              - azureml-sdk==0.1.0.*
+              - azureml-designer-core
+              - --index-url https://azuremlsdktestpypi.azureedge.net/dev/aml/office/134157926D8F 
+              - --extra-index-url https://pypi.org/simple            
     command: [python, to_dfd.py]
     args: [{inputPath: input}, {outputPath: output}]
