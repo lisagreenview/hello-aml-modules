@@ -3,30 +3,12 @@
 amlModuleIdentifier:
   moduleName: add
   moduleVersion: 0.0.1
-jobType: basic
-metadata:
-  annotations:
-    codegenBy: dsl.module
 description: Add two numbers - an illustrative module
-inputs:
-- name: Left
-  type: AnyDirectory
-  argumentName: left
-- name: Right
-  type: AnyDirectory
-  argumentName: right
-outputs:
-- name: Output
-  type: AnyDirectory
-  argumentName: output
 implementation:
   container:
     amlEnvironment:
       python:
         condaDependenciesFile: conda.yaml
-    command:
-    - python
-    - add.py
     args:
     - --left
     - inputPath: Left
@@ -34,3 +16,21 @@ implementation:
     - inputPath: Right
     - --output
     - outputPath: Output
+    command:
+    - python
+    - add.py
+inputs:
+- name: Left
+  type: AnyDirectory
+  argumentName: left
+- name: Right
+  type: AnyDirectory
+  argumentName: right
+jobType: basic
+metadata:
+  annotations:
+    codegenBy: dsl.module
+outputs:
+- name: Output
+  type: AnyDirectory
+  argumentName: output

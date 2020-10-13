@@ -1,0 +1,34 @@
+#  This is an auto generated module spec yaml file.
+#  For more details, please refer to https://aka.ms/azureml-module-specs
+amlModuleIdentifier:
+  moduleName: multiply
+  moduleVersion: 0.0.1
+metadata:
+  annotations:
+    codegenBy: dsl.module
+inputs:
+- name: Left
+  type: AnyDirectory
+  argumentName: left
+- name: Right
+  type: AnyDirectory
+  argumentName: right
+outputs:
+- name: Result
+  type: AnyDirectory
+  argumentName: result
+implementation:
+  container:
+    amlEnvironment:
+      python:
+        condaDependenciesFile: conda.yaml
+    command:
+    - python
+    - multiply.py
+    args:
+    - --left
+    - inputPath: Left
+    - --right
+    - inputPath: Right
+    - --result
+    - outputPath: Result
