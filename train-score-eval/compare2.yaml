@@ -1,52 +1,51 @@
-amlModuleIdentifier:
-  namespace: microsoft.com/aml/samples
-  moduleName: "Compare 2 Models"
-  moduleVersion: 0.0.10
-description: A dummy comparison module takes two models as input and outputs the better one 
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
+$schema: http://azureml/sdk-2-0/CommandComponent.json
+name: microsoft.com.azureml.samples.compare_2_models
+version: 0.1.0
+display_name: Compare 2 Models
+type: CommandComponent
+description: A dummy comparison module takes two models as input and outputs the better
+  one
+tags: {}
 inputs:
-- name: model1
-  type: AnyDirectory
-  description: 'The first model to compare with'
-  optional: True
-- name: eval_result1
-  type: AnyDirectory
-  description: 'The evaluation result of first model'
-  optional: True
-- name: model2
-  type: AnyDirectory
-  description: 'The second model to compare'
-  optional: True
-- name: eval_result2
-  type: AnyDirectory
-  description: 'The evaluation result of second model'
-  optional: True
+  model1:
+    type: path
+    description: The first model to compare with
+    optional: true
+  eval_result1:
+    type: path
+    description: The evaluation result of first model
+    optional: true
+  model2:
+    type: path
+    description: The second model to compare
+    optional: true
+  eval_result2:
+    type: path
+    description: The evaluation result of second model
+    optional: true
 outputs:
-- name: best_model
-  type: AnyDirectory
-  description: The better model among the two
-- name: best_result
-  type: AnyDirectory
-  description: The better model evaluation result among the two
-implementation:
-  container:
-    amlEnvironment:
-      python:
-        condaDependencies:
-          name: project_environment
-          channels:
-            - defaults
-          dependencies:
-            - python=3.6.8
-            - pip:
-              - azureml-sdk==0.1.0.*
-              - --index-url https://azuremlsdktestpypi.azureedge.net/dev/aml/office/134157926D8F 
-              - --extra-index-url https://pypi.org/simple
-    command: [python, compare2.py]
-    args: [
-      [--model1, {inputPath: model1}],
-      [--eval_result1, {inputPath: eval_result1}],
-      [--model2, {inputPath: model2}],
-      [--eval_result2, {inputPath: eval_result2}],
-      --best_model, {outputPath: best_model},
-      --best_result, {outputPath: best_result}
-    ]
+  best_model:
+    type: path
+    description: The better model among the two
+  best_result:
+    type: path
+    description: The better model evaluation result among the two
+command: >-
+  python compare2.py [--model1 {inputs.model1}] [--eval_result1 {inputs.eval_result1}]
+  [--model2 {inputs.model2}] [--eval_result2 {inputs.eval_result2}] --best_model {outputs.best_model}
+  --best_result {outputs.best_result}
+environment:
+  conda:
+    conda_dependencies:
+      name: project_environment
+      channels:
+      - defaults
+      dependencies:
+      - python=3.6.8
+      - pip:
+        - azureml-defaults
+        - azureml-dataprep>=1.6
+  os: Linux

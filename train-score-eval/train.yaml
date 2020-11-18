@@ -1,42 +1,43 @@
-amlModuleIdentifier:
-  namespace: microsoft.com/aml/samples
-  moduleName: "Train"
-  moduleVersion: 0.0.8
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
+$schema: http://azureml/sdk-2-0/CommandComponent.json
+name: microsoft.com.azureml.samples.train
+version: 0.1.0
+display_name: Train
+type: CommandComponent
+description: A dummy training module
+tags: {}
 inputs:
-- name: training_data
-  type:
-  - AnyFile
-  - AnyDirectory
-  description: Training data organized in the torchvision format/structure
-- name: max_epochs
-  type: Integer
-  description: Maximum number of epochs for the training
-- name: learning_rate
-  type: Float
-  default: 0.01
-  description: Learning rate, default is 0.01
+  training_data:
+    type: path
+    description: Training data organized in the torchvision format/structure
+    optional: false
+  max_epochs:
+    type: Integer
+    description: Maximum number of epochs for the training
+    optional: false
+  learning_rate:
+    type: Float
+    description: Learning rate, default is 0.01
+    default: 0.01
+    optional: false
 outputs:
-- name: model_output
-  type: AnyDirectory
-  description: The output model (zipped)
-implementation:
-  container:
-    amlEnvironment:
-      python:
-        condaDependencies:
-          name: project_environment
-          channels:
-            - defaults
-          dependencies:
-            - python=3.6.8
-            - pip:
-              - azureml-sdk==0.1.0.*
-              - --index-url https://azuremlsdktestpypi.azureedge.net/dev/aml/office/134157926D8F 
-              - --extra-index-url https://pypi.org/simple
-    command: [python, train.py]
-    args: [
-      --training_data, {inputPath: training_data},
-      --max_epochs, {inputValue: max_epochs},
-      --learning_rate, {inputValue: learning_rate},
-      --model_output, {outputPath: model_output},
-    ]
+  model_output:
+    type: path
+    description: The output model
+command: >-
+  python train.py --training_data {inputs.training_data} --max_epochs {inputs.max_epochs}
+  --learning_rate {inputs.learning_rate} --model_output {outputs.model_output}
+environment:
+  conda:
+    conda_dependencies:
+      name: project_environment
+      channels:
+      - defaults
+      dependencies:
+      - python=3.6.8
+      - pip:
+        - azureml-defaults
+        - azureml-dataprep>=1.6
+  os: Linux

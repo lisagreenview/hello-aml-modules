@@ -1,32 +1,33 @@
-amlModuleIdentifier:
-  namespace: microsoft.com/aml/samples
-  moduleName: "Evaluate"
-  moduleVersion: 0.0.8
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
+$schema: http://azureml/sdk-2-0/CommandComponent.json
+name: microsoft.com.azureml.samples.evaluate
+version: 0.1.0
+display_name: Evaluate
+type: CommandComponent
 description: A dummy evaluate module
+tags: {}
 inputs:
-- name: scoring_result
-  type: AnyDirectory
-  description: Scoring result file in TSV format
+  scoring_result:
+    type: path
+    description: Scoring result file in TSV format
+    optional: false
 outputs:
-- name: eval_output
-  type: AnyDirectory
-  description: Evaluation result
-implementation:
-  container:
-    amlEnvironment:
-      python:
-        condaDependencies:
-          name: project_environment
-          channels:
-            - defaults
-          dependencies:
-            - python=3.6.8
-            - pip:
-              - azureml-sdk==0.1.0.*
-              - --index-url https://azuremlsdktestpypi.azureedge.net/dev/aml/office/134157926D8F 
-              - --extra-index-url https://pypi.org/simple
-    command: [python, eval.py]
-    args: [
-      --scoring_result, {inputPath: scoring_result},
-      --eval_output, {outputPath: eval_output}
-    ]
+  eval_output:
+    type: path
+    description: Evaluation result
+command: >-
+  python eval.py --scoring_result {inputs.scoring_result} --eval_output {outputs.eval_output}
+environment:
+  conda:
+    conda_dependencies:
+      name: project_environment
+      channels:
+      - defaults
+      dependencies:
+      - python=3.6.8
+      - pip:
+        - azureml-defaults
+        - azureml-dataprep>=1.6
+  os: Linux

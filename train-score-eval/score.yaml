@@ -1,36 +1,38 @@
-amlModuleIdentifier:
-  namespace: microsoft.com/aml/samples
-  moduleName: "Score"
-  moduleVersion: 0.0.6
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
+$schema: http://azureml/sdk-2-0/CommandComponent.json
+name: microsoft.com.azureml.samples.score
+version: 0.1.0
+display_name: Score
+type: CommandComponent
 description: A dummy scoring module
+tags: {}
 inputs:
-- name: model_input
-  type: AnyDirectory
-  description: Zipped model file
-- name: test_data
-  type: [AnyFile, AnyDirectory]
-  description: Test data organized in the torchvision format/structure
+  model_input:
+    type: path
+    description: Zipped model file
+    optional: false
+  test_data:
+    type: path
+    description: Test data organized in the torchvision format/structure
+    optional: false
 outputs:
-- name: score_output
-  type: AnyDirectory
-  description: The scoring result in TSV
-implementation:
-  container:
-    amlEnvironment:
-      python:
-        condaDependencies:
-          name: project_environment
-          channels:
-            - defaults
-          dependencies:
-            - python=3.6.8
-            - pip:
-              - azureml-sdk==0.1.0.*
-              - --index-url https://azuremlsdktestpypi.azureedge.net/dev/aml/office/134157926D8F 
-              - --extra-index-url https://pypi.org/simple
-    command: [python, score.py]
-    args: [
-      --model_input, {inputPath: model_input},
-      --test_data, {inputPath: test_data},
-      --score_output, {outputPath: score_output}
-    ]
+  score_output:
+    type: path
+    description: The scoring result in TSV
+command: >-
+  python score.py --model_input {inputs.model_input} --test_data {inputs.test_data}
+  --score_output {outputs.score_output}
+environment:
+  conda:
+    conda_dependencies:
+      name: project_environment
+      channels:
+      - defaults
+      dependencies:
+      - python=3.6.8
+      - pip:
+        - azureml-defaults
+        - azureml-dataprep>=1.6
+  os: Linux
