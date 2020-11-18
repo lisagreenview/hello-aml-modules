@@ -1,0 +1,5 @@
+#DECLARE Input_data string = @@SS_Data@@+".ss";
+
+Input = SSTREAM @Input_data;
+
+OUTPUT Input TO @@Tsv_Data@@;

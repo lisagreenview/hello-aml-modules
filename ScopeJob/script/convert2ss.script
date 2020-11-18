@@ -1,0 +1,9 @@
+#DECLARE Output_stream string = @@SS_Data@@+".ss";
+#DECLARE In_Data string =@"@@RawData@@";
+
+RawData = EXTRACT @@ExtractClause@@ FROM @In_Data
+USING DefaultTextExtractor();
+
+
+OUTPUT RawData TO SSTREAM @Output_stream;
+

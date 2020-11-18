@@ -2,38 +2,44 @@
 ### Component
 
 ```python
-# load component
+# load published component
 component.load(
     workspace:azureml.core.workspace.Workspace,
-    name:str=None,
+    name:str=None, # name:version, name@label
     version:str=None,
+    label:str=None, # check the backend capability
 )
 
+# load multiple published components
 component.batch_load(
     workspace:azureml.core.workspace.Workspace,
-    identifiers:List[str],
+    identifiers:List[str], # name:version, name@label
 )
 
+# load unpublished component from yaml (local or public github)
 component.from_yaml(
     workspace:azureml.core.workspace.Workspace,
     yaml_file:str=None,
 )
 
+# load component from a local function (must be dsl.component)
+# see example:https://github.com/lisagreenview/hello-aml-modules/blob/master/calculator/calculator.ipynb
 component.from_func(
     workspace:azureml.core.workspace.Workspace,
     func:types.FunctionType,
     force_reload=True
 )
 
+# local run
 component.run(
     use_docker=True,
     track_run_history=True,
 )
 
-component.set_input()
+# specify input port and parameter
+component.set_inputs()
 
-component.set_parameters()
-
+# configure run settings
 component.runsettings.configure()
 ```
 
@@ -80,6 +86,7 @@ pipeline.run(
 ```python
 run.wait_for_completion()
 
+# see example: https://github.com/Azure/DesignerPrivatePreviewFeatures/blob/sdkpreview/azureml-modules/samples/pipeline_run_visualize_profile.ipynb
 run.visualize()
 
 run.profile()
