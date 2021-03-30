@@ -1,0 +1,74 @@
+#source ../configs/pipeline/pipeline-component/train-score-eval-pipeline-component.yaml
+#train-score-eval-pipeline-component.yaml
+$schema: http://azureml/sdk-2-0/PipelineComponent.json
+display_name: train model and evaluate model perf
+name: CoreRelevance.L2.Train-score-eval
+version: dummy_str
+type: pipeline_component
+
+#these inputs outputs will be visible at the pipeline properties level
+inputs:
+  input_input: 
+    type: path
+    description: "training data"
+  test_input:
+    type: path
+    description: "test data"
+  train:
+    learning_rate:
+      type: float
+      description: "learning rate"
+      optional: False
+      default: 0.01
+    max_epochs: 
+      type: integer
+      min: 1
+      max: 128
+      default: 5
+  resources:
+    instance_type: 
+      type: string
+      default: "ND40_v2_4GPU_2CPU"
+    instance_count:
+      type: integer
+      min: 1
+      max: 128
+
+outputs: 
+  model_output:
+    type: path
+    description: "trained model"
+  eval_output:
+    type: path
+    description: "metrics output"
+
+
+pipeline:
+  train:
+    type: DistributedComponent
+    component: file:./train-command-component.yaml
+    compute: #Specifying a special compute for the train job, where as other jobs use default compute
+      instance_type: ND40_v2_4GPU_2CPU
+      instance_count: 1
+    inputs:
+      training_data: inputs.input_data 
+      max_epochs: inputs.train.max_epochs
+      learning_rate: inputs.train.learning_rate
+    outputs:
+      model_output: outputs.model_output 
+  
+  score:
+    type: CommandComponent
+    component: file:./score-command-component.yaml
+    inputs:
+      model_input: pipeline.train.outputs.model_output
+      test_data: inputs.test_input
+
+  eval:
+    type: CommandComponent
+    component: file:./evaluate-command-component.yaml
+    inputs:
+      scoring_result: pipeline.score.outputs.score_output
+    outputs:
+      eval_output: outputs.pipeline_component_evaluation_report
+

@@ -54,7 +54,7 @@ from azure.ml.component import dsl, types, target_selector, InputGroup, Input, O
 def training_pipeline(
         resources: types.Group(
             instance_count: types.Integer(optional = False, min = 1, max = 128),
-            instance_type: types.String(optional = False)
+            instance_type: types.String(optional = False, default = 'ND40_v2_4GPU_2CPU')
         ),
         train: types.Group(
             learning_rate: types.Float(optional=False, default=0.01, description='learning rate'),
@@ -78,6 +78,9 @@ def training_pipeline(
         output_mode="mount",
         path_on_datastore="azureml/model/CR/train_result",
     )
+    # register the output dataset
+    train.outputs.model_output.register_as(
+        name="Bing.CR.L2_model", create_new_version=True)
                                            
     score = score_component_func(
         model_input=train.outputs.model_output, 
