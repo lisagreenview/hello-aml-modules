@@ -1,0 +1,78 @@
+# pipeline with subgraph
+$schema: http://azureml/sdk-2-0/PipelineJob.json
+name: CoreRelevance.L2.Train-score-compare
+display_name: Pipeline Job that runs two Pipeline Components and compares models 
+type: pipeline_job
+
+inputs:
+  pipeline_job_training_input: #using dataset, can use datastore + datapath also
+    data: azureml:titanic-dataset-train
+  pipeline_job_test_input:
+    data: azureml:titanic-dataset-test
+  pipeline_job_training_max_epochs_1: 10
+  pipeline_job_training_max_epochs_2: 16
+  pipeline_job_training_learning_rate_low_1: 0.02
+  pipeline_job_training_learning_rate_low_2: 0.01
+
+outputs: 
+  pipeline_job_best_model:
+    data: 
+      datastore: model_store
+      path: /best-model/{mmyy}}/
+      name: CR.L2.TrainedModel.April 
+
+jobs:
+  pipeline_job_with_pipeline_component_1:
+    type: PipelineComponent_job
+    component: aml:component/CoreRelevance.L2.Train-score-eval
+    compute: 
+      instance_type: ND40_v2_4GPU_2CPU
+      instance_count: 4
+    inputs:
+      input_data: inputs.pipeline_job_training_input
+      test_input: inputs.pipeline_job_test_input
+      max_epochs: inputs.pipeline_job_training_max_epochs_1
+      learning_rate: inputs.pipeline_job_training_learning_rate_1
+    outputs:
+      model_output:
+        data: 
+          datastore: ws_datastore
+          path: /trained-model-lr-low/{ddmmyy}
+      eval_output:
+        data: 
+          datastore: ws_datastore
+          path: /report-lr-low
+
+  pipeline_job_with_pipeline_component_2:
+    type: PipelineComponent_job
+    component: aml:component/CoreRelevance.L2.Train-score-eval
+    compute: 
+      instance_type: ND40_v2_4GPU_2CPU
+      instance_count: 6
+    inputs:
+      input_data: inputs.pipeline_job_training_input
+      test_input: inputs.pipeline_job_test_input
+      max_epochs: inputs.pipeline_job_training_max_epochs_2
+      learning_rate: inputs.pipeline_job_training_learning_rate_2
+    outputs:
+      model_output:
+        data: 
+          datastore: ws-datastore 
+          path: /trained-model-lr-high
+      eval_output:
+        data: 
+          datastore: ws-datastore
+          path: /report-lr-high
+
+  compare_models_job:
+    type: CommandComponent_job
+    component: file:./compare-models-command-component.yaml
+    compute: 
+      target: cpu_cluster
+    inputs:
+      model1: jobs.pipeline_job_with_pipeline_component_1.outputs.pipeline_component_trained_model
+      eval_result1: jobs.pipeline_job_with_pipeline_component_1.outputs.eval_output
+      model2: jobs.pipeline_job_with_pipeline_component_2.outputs.pipeline_component_trained_model
+      eval_result2: jobs.pipeline_job_with_pipeline_component_2.outputs.val_output
+    outputs:
+      best_model: outputs.pipeline_job_best_model

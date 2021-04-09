@@ -3,8 +3,8 @@
 $schema: http://azureml/sdk-2-0/PipelineComponent.json
 display_name: train model and evaluate model perf
 name: CoreRelevance.L2.Train-score-eval
-version: dummy_str
-type: pipeline_component
+version: 0.0.1
+type: PipelineComponent
 
 #these inputs outputs will be visible at the pipeline properties level
 inputs:
@@ -42,11 +42,10 @@ outputs:
     type: path
     description: "metrics output"
 
-
 pipeline:
   train:
     type: DistributedComponent
-    component: file:./train-command-component.yaml
+    component: aml:component/train-command-component.yaml:0.0.1
     compute: #Specifying a special compute for the train job, where as other jobs use default compute
       instance_type: ND40_v2_4GPU_2CPU
       instance_count: 1
@@ -59,7 +58,7 @@ pipeline:
   
   score:
     type: CommandComponent
-    component: file:./score-command-component.yaml
+    component: aml:component/score-command-component.yaml:0.0.2
     inputs:
       model_input: pipeline.train.outputs.model_output
       test_data: inputs.test_input
@@ -71,4 +70,7 @@ pipeline:
       scoring_result: pipeline.score.outputs.score_output
     outputs:
       eval_output: outputs.pipeline_component_evaluation_report
+
+
+
 
