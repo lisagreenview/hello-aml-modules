@@ -1,4 +1,3 @@
-from _typeshed import FileDescriptorLike
 from azureml.core import Workspace
 
 subscription_id = '74eccef0-4b8d-4f83-b5f9-fa100d155b22' 
@@ -41,7 +40,11 @@ eval_component_func = Component.load(ws, name='microsoft.com.azureml.samples.sco
 compare_component_func = Component.load(ws, name='microsoft.com.azureml.samples.compare_2_models')
 
 # define a sub pipeline
-from azure.ml.component import dsl, types, target_selector, InputGroup, Input, Output
+from azure.ml.component import Pipeline, Component, dsl, types, target_selector, ParameterGroup
+
+class train_settings(ParameterGroup):
+    learning_rate: types.Float(optional=False, default=0.01, description='learning rate')
+    max_epochs: types.Integer(optional=False, default=5)
 
 @dsl.pipeline(
     name = 'CoreRelevance.L2.Train-score-eval', 
@@ -52,29 +55,29 @@ from azure.ml.component import dsl, types, target_selector, InputGroup, Input, O
     datastore = 'wsblob'
 )
 def training_pipeline(
-        resources: types.Group(
-            instance_count: types.Integer(optional = False, min = 1, max = 128),
-            instance_type: types.String(optional = False, default = 'ND40_v2_4GPU_2CPU')
-        ),
-        train: types.Group(
-            learning_rate: types.Float(optional=False, default=0.01, description='learning rate'),
-            max_epochs: types.Integer(optional=False, default=5)
-        ),
-        input_data: types.Path(optional=False, description='training data'), 
-        test_data: types.Path(optional=False, description='test data')
-    ):
+    input_data: types.Path(optional=False, description='training data'), # input data as pipeline parameter
+    test_data: types.Path(optional=False, description='test data'),
+    resources: types.Group( # define the Parameter Group inline
+        description = "resource definition",
+        value = [
+            types.Integer(name = 'instance_count', optional = False, min = 1, max = 128, default = 1),
+            types.String(name = 'instance_type', optional = False, default = 'ND40_v2_4GPU_2CPU')
+        ]
+    ),
+    train: types.Group(desctiption = "training parameters") = train_settings() # use a defined ParameterGroup class
+):
     train = train_component_func(
         training_data=input_data, 
         max_epochs = train.max_epochs, 
         learning_rate = train.learning_rate)
 
     train.runsettings.resource_layout.configure(
-        instance_type = resource.instance_type,
-        instance_count = resource.instance_count,
+        instance_type = resources.instance_type,
+        instance_count = resources.instance_count,
         )
 
     train.outputs.model_output.configure(
-        datastore=my_datastore,
+        datastore='my_datastore',
         output_mode="mount",
         path_on_datastore="azureml/model/CR/train_result",
     )
@@ -89,14 +92,14 @@ def training_pipeline(
     eval = eval_component_func(scoring_result=score.outputs.score_output)
 
     eval.outputs.eval_output.configure(
-        datastore = pipeline_datastore,
+        datastore = 'pipeline_datastore',
         output_mode = "mount",
         path_on_datastore = "azureml/pipeline/eval/eval_result"
     )
     
     return [
-        Output(name = 'eval_output', value = eval.outputs.eval_output, description = 'metrics output', type = 'path'),
-        Output(name = 'model_output', value = train.outputs.model_output, description = 'model', type = 'path')
+        types.Output(name = 'eval_output', value = eval.outputs.eval_output, description = 'metrics output'),
+        types.Output(name = 'model_output', value = train.outputs.model_output, description = 'model')
     ]
 
 pipeline_comp = training_pipeline()
@@ -115,15 +118,11 @@ train_score_func = Component.load(name='CoreRelevance.L2.Train-score-eval')
     datastore = 'my_adls'
 )
 def train_best_model_pipeline():
-    train_score_comp_1 = train_score_func()
-    train_score_comp_2 = train_score_func()
     compare_comp = compare_component_func()
 
-    train_score_comp_1.set_inputs(
-        resources.instance_type = 'ND40_v2_4GPU_2CPU',
-        resources.instance_count = 4,
-        train.learning_rate = 0.02,
-        train.max_epochs = 10,
+    train_score_comp_1 = train_score_func(
+        resources = {'instance_type':'ND40_v2_4GPU_2CPU','instance_count': 4},
+        train = train_settings(learning_rate = 0.02, max_epochs = 10),
         input_data = train_data,
         test_dat = test_data
     )
@@ -138,11 +137,9 @@ def train_best_model_pipeline():
         path_on_compute="/input/test_data/"
     )
 
-    train_score_comp_2.set_inputs(
-        resources.instance_type = 'ND40_v2_4GPU_2CPU',
-        resources.instance_count = 6,
-        train.learning_rate = 0.01,
-        train.max_epochs = 16,
+    train_score_comp_2 = train_score_func(
+        resources = {'instance_type':'ND40_v2_4GPU_2CPU','instance_count': 6},
+        train = train_settings(learning_rate = 0.01, max_epochs = 16),
         input_data = train_data,
         test_dat = test_data
     )
