@@ -25,8 +25,8 @@ compare_component_func = Component.load(ws, name='microsoft.com.azureml.samples.
 @dsl.pipeline(
     name = 'CoreRelevance.L2.Train-score-compare', 
     display_name = 'compare model performance',
-    target = 'cpu_cluster',
-    datastore = 'my_adls'
+    target = 'cpu_cluster', # target and datastore will be applied to subgraph if they're not set in subgraph
+    datastore = 'adls_datastore'
 )
 def train_best_model_pipeline():
     compare_comp = compare_component_func()
@@ -48,6 +48,14 @@ def train_best_model_pipeline():
         path_on_compute="/input/test_data/"
     )
 
+    train_score_comp_1.outputs.model_output.configure( # override model_output configuration
+        datastore='model_datastore',
+        output_mode="mount",
+        path_on_datastore=f"azureml/model/CR/train_result/lr{}"
+    )
+
+    # eval_output will use the default value set in "CoreRelevance.L2.Train-score-eval" subgraph
+
     train_score_comp_2 = train_score_func(
         resources = {'instance_type':'ND40_v2_4GPU_2CPU','instance_count': 6},
         train = train_settings(learning_rate = 0.01, max_epochs = 16),
@@ -63,6 +71,12 @@ def train_best_model_pipeline():
     train_score_comp_2.inputs.test_data.configure(
         mode="mount",
         path_on_compute="/input/test_data/"
+    )
+
+    train_score_comp_2.outputs.model_output.configure( # override model_output configuration
+        datastore='model_datastore',
+        output_mode="mount",
+        path_on_datastore="azureml/model/CR/train_result/"
     )
 
     compare_comp.set_inputs(

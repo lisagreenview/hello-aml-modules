@@ -33,8 +33,7 @@ class train_settings(ParameterGroup):
     name = 'CoreRelevance.L2.Train-score-eval', 
     version = '0.0.1',
     display_name = 'train model and evaluate model perf',
-    target = 'cpu_cluster',
-    datastore = 'wsblob'
+    datastore = 'workspaceblob'
 )
 def training_pipeline(
     input_data: types.Path(optional=False, description='training data'), # input data as pipeline parameter
@@ -78,7 +77,8 @@ def training_pipeline(
         output_mode = "mount",
         path_on_datastore = "azureml/pipeline/eval/eval_result"
     )
-    
+
+    # the outputs of score module won't be seen outside the subgraph, as it's not been promoted as pipeline level outputs
     return [
         types.Output(name = 'eval_output', value = eval.outputs.eval_output, description = 'metrics output'),
         types.Output(name = 'model_output', value = train.outputs.model_output, description = 'model')
