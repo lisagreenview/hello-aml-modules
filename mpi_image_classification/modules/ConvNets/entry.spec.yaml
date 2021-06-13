@@ -1,0 +1,196 @@
+#  This is an auto generated module spec yaml file.
+#  For more details, please refer to https://github.com/Azure/AzureML-Modules/tree/master/specs
+amlModuleIdentifier:
+  moduleName: Train Image Classification
+  moduleVersion: 0.0.1
+metadata:
+  annotations: {}
+jobType: mpi
+inputs:
+- name: Train Data
+  type:
+  - AnyDirectory
+  - AnyFile
+  description: path to train dataset
+- name: Valid Data
+  type:
+  - AnyDirectory
+  - AnyFile
+  description: path to valid dataset
+- name: Data Backend
+  type: Enum
+  description: 'data backend: pytorch | syntetic | dali-gpu | dali-cpu (default: dali-cpu)'
+  default: dali-cpu
+  options:
+  - pytorch
+  - syntetic
+  - dali-gpu
+  - dali-cpu
+  optional: true
+- name: Arch
+  type: Enum
+  description: 'model architecture: resnet18 | resnet34 | resnet50 | resnet101 | resnet152
+    | resnext101_32x4d | se_resnext101_32x4d (default: resnet50)'
+  default: resnet50
+  options:
+  - resnet18
+  - resnet34
+  - resnet50
+  - resnet101
+  - resnet152
+  - resnext101_32x4d
+  - se_resnext101_32x4d
+  optional: true
+- name: Model Config
+  type: Enum
+  description: 'model configs: classic | fanin | grp_fanin | grp_fanout(default: classic)'
+  default: classic
+  options:
+  - classic
+  - fanin
+  - grp_fanin
+  - grp_fanout
+  optional: true
+- name: Workers
+  type: Integer
+  description: 'number of data loading workers (default: 5)'
+  default: 5
+  optional: true
+- name: Epochs
+  type: Integer
+  description: number of total epochs to run
+  default: 90
+  optional: true
+- name: Batch Size
+  type: Integer
+  description: 'mini-batch size (default: 256) per gpu'
+  default: 256
+  optional: true
+- name: Optimizer Batch Size
+  type: Integer
+  description: size of a total batch size, for simulating bigger batches using gradient
+    accumulation
+  default: -1
+  optional: true
+- name: Lr
+  type: Float
+  description: initial learning rate
+  default: 0.1
+  optional: true
+- name: Lr Schedule
+  type: Enum
+  description: 'Type of LR schedule: step, linear, cosine'
+  default: step
+  options:
+  - step
+  - linear
+  - cosine
+  optional: true
+- name: Warmup
+  type: Integer
+  description: number of warmup epochs
+  default: 0
+  optional: true
+- name: Label Smoothing
+  type: Float
+  description: label smoothing
+  default: 0.0
+  optional: true
+- name: Mixup
+  type: Float
+  description: mixup alpha
+  default: 0.0
+  optional: true
+- name: Momentum
+  type: Float
+  description: momentum
+  default: 0.9
+  optional: true
+- name: Weight Decay
+  type: Float
+  description: 'weight decay (default: 1e-4)'
+  default: 0.0001
+  optional: true
+- name: Print Freq
+  type: Integer
+  description: 'print frequency (default: 10)'
+  default: 10
+  optional: true
+- name: Resume
+  type: String
+  description: 'path to latest checkpoint (default: none)'
+  default: ''
+  optional: true
+- name: Pretrained Weights
+  type: String
+  description: load weights from here
+  default: ''
+  optional: true
+- name: Static Loss Scale
+  type: Float
+  description: Static loss scale, positive power of 2 values can improve fp16 convergence.
+  default: 1.0
+  optional: true
+- name: Prof
+  type: Integer
+  description: Run only N iterations
+  default: -1
+  optional: true
+- name: Seed
+  type: Integer
+  description: random seed used for numpy and pytorch
+  default: 123
+  optional: true
+- name: Raport File
+  type: String
+  description: file in which to store JSON experiment raport
+  default: experiment_raport.json
+  optional: true
+- name: Save Checkpoint Epochs
+  type: Integer
+  description: how many epochs run between saving checkpoints
+  default: 2
+  optional: true
+outputs:
+- name: Workspace
+  type: AnyDirectory
+  description: path to directory where checkpoints will be stored
+implementation:
+  container:
+    amlEnvironment:
+      docker:
+        baseImage: mcr.microsoft.com/azureml/base-gpu:openmpi3.1.2-cuda10.0-cudnn7-ubuntu18.04
+      python:
+        condaDependenciesFile: conda.yaml
+    command:
+    - python
+    - entry.py
+    args:
+    - --train_data
+    - inputPath: Train Data
+    - --val_data
+    - inputPath: Valid Data
+    - [--data_backend, {inputValue: Data Backend}]
+    - [--arch, {inputValue: Arch}]
+    - [--model_config, {inputValue: Model Config}]
+    - [--workers, {inputValue: Workers}]
+    - [--epochs, {inputValue: Epochs}]
+    - [--batch_size, {inputValue: Batch Size}]
+    - [--optimizer_batch_size, {inputValue: Optimizer Batch Size}]
+    - [--lr, {inputValue: Lr}]
+    - [--lr_schedule, {inputValue: Lr Schedule}]
+    - [--warmup, {inputValue: Warmup}]
+    - [--label_smoothing, {inputValue: Label Smoothing}]
+    - [--mixup, {inputValue: Mixup}]
+    - [--momentum, {inputValue: Momentum}]
+    - [--weight_decay, {inputValue: Weight Decay}]
+    - [--print_freq, {inputValue: Print Freq}]
+    - [--resume, {inputValue: Resume}]
+    - [--pretrained_weights, {inputValue: Pretrained Weights}]
+    - [--static_loss_scale, {inputValue: Static Loss Scale}]
+    - [--prof, {inputValue: Prof}]
+    - [--seed, {inputValue: Seed}]
+    - [--raport_file, {inputValue: Raport File}]
+    - [--save_checkpoint_epochs, {inputValue: Save Checkpoint Epochs}]
+    - --workspace
+    - outputPath: Workspace

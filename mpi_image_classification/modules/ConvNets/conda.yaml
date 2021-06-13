@@ -1,0 +1,20 @@
+channels:
+- defaults
+- conda-forge
+dependencies:
+- python=3.6.8
+- nvidia-apex
+- pip:
+  - azureml-sdk==0.1.0.16674448
+  - --index-url https://azuremlsdktestpypi.azureedge.net/dev/aml/office/134157926D8F
+  - --extra-index-url https://pypi.org/simple
+  - --extra-index-url=https://azuremlsdktestpypi.azureedge.net/CLI-SDK-Runners-Validation/16689461
+  - azureml-pipeline-wrapper==0.1.0.16689461
+  - git+git://github.com/NVIDIA/dllogger.git@26a0f8f1958de2c0c460925ff6102a4d2486d6cc#egg=dllogger
+  - watchdog==0.10.3
+  - torch==1.3.0
+  - torchvision==0.4.1
+  - tensorboard==2.2.2
+  - --extra-index-url=https://developer.download.nvidia.com/compute/redist/
+  - nvidia-dali-cuda100
+name: project_environment
