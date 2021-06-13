@@ -1,0 +1,95 @@
+#  This is an auto generated module spec yaml file.
+#  For more details, please refer to https://github.com/Azure/AzureML-Modules/tree/master/specs
+amlModuleIdentifier:
+  moduleName: 'TLC: Test'
+  moduleVersion: 0.0.1
+metadata:
+  annotations: {}
+inputs:
+- name: Trained Model
+  type:
+  - AnyDirectory
+  - AnyFile
+- name: Test Data
+  type:
+  - AnyDirectory
+  - AnyFile
+- name: Instances Reader
+  type: String
+  default: StreamingInstances
+  optional: true
+- name: Instances Settings
+  type: String
+  optional: true
+- name: Cache Instances In Memory
+  type: Enum
+  options:
+  - '-'
+  - +
+  optional: true
+- name: Random Seed
+  type: Integer
+  default: 123
+  optional: true
+- name: Use Threads
+  type: Enum
+  options:
+  - '-'
+  - +
+  optional: true
+- name: Proportion Of Train Data To Use
+  type: Float
+  optional: true
+- name: Skipchartrain
+  type: String
+  optional: true
+- name: Skipchartest
+  type: String
+  optional: true
+- name: Evaluator
+  type: String
+  optional: true
+- name: Evaluator Settings
+  type: String
+  optional: true
+- name: Debug Level
+  type: Integer
+  optional: true
+- name: Print Model Summary
+  type: Enum
+  options:
+  - '-'
+  - +
+  optional: true
+outputs:
+- name: Per Instance Predictions
+  type: AnyFile
+implementation:
+  os: Windows
+  container:
+    amlEnvironment:
+      python:
+        condaDependenciesFile: conda.yaml
+    command:
+    - python
+    - entry.py
+    args:
+    - --trained_model
+    - inputPath: Trained Model
+    - --test_data
+    - inputPath: Test Data
+    - [--instances_reader, {inputValue: Instances Reader}]
+    - [--instances_settings, {inputValue: Instances Settings}]
+    - [--cache_instances_in_memory, {inputValue: Cache Instances In Memory}]
+    - [--random_seed, {inputValue: Random Seed}]
+    - [--use_threads, {inputValue: Use Threads}]
+    - [--proportion_of_train_data_to_use, {inputValue: Proportion Of Train Data To
+          Use}]
+    - [--skipchartrain, {inputValue: Skipchartrain}]
+    - [--skipchartest, {inputValue: Skipchartest}]
+    - [--evaluator, {inputValue: Evaluator}]
+    - [--evaluator_settings, {inputValue: Evaluator Settings}]
+    - [--debug_level, {inputValue: Debug Level}]
+    - [--print_model_summary, {inputValue: Print Model Summary}]
+    - --per_instance_predictions
+    - outputPath: Per Instance Predictions
